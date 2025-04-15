@@ -50,6 +50,18 @@ router.post("/employees", (req, res) => {
       res.json({ message: "❌ Employee deleted successfully!" });
     });
   });
+  router.get("/employees", (req, res) => {
+    const { page = 1, limit = 5 } = req.query; // Default: page 1, limit 5 records per page
+    const offset = (page - 1) * limit; // Calculate offset
+  
+    const paginatedQuery = `SELECT * FROM employee LIMIT ? OFFSET ?;`;
+  
+    con.query(paginatedQuery, [parseInt(limit), parseInt(offset)], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    });
+  });
+  
     
   
 
